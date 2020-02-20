@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljw.blogservice.dao.BlogDao">
+    <resultMap id="BlogMap" type="com.ljw.blogservice.domain.Blog">
+        <result column="uuid" property="uuid" />
+        <result column="title" property="title" />
+        <result column="image" property="image" />
+        <result column="description" property="description" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="content" property="content" />
+        <result column="comment_count" property="commentCount" />
+        <result column="like_count" property="likeCount" />
+        <result column="collect_count" property="collectCount" />
+        <result column="browse_count" property="browseCount" />
+        <result column="is_recommend" property="isRecommend" />
+        <result column="is_hot" property="isHot" />
+        <result column="status" property="status" />
+        <result column="class_id" property="classId" />
+        <result column="cate_name" property="cateName" />
+    </resultMap>
+
+    <select id="listAllBlogs" resultMap="BlogMap">
+        select * from blog;
+    </select>
+
+</mapper>
