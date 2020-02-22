@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping("/blog")
+@RequestMapping("/blogController")
 public class BlogController {
 
     @Autowired
