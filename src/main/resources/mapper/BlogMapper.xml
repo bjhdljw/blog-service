@@ -24,4 +24,48 @@
         select * from blog;
     </select>
 
+    <insert id="insertBlog" parameterType="com.ljw.blogservice.domain.Blog">
+        insert into blog
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                `uuid`,
+            </if>
+            <if test="title != null">
+                `title`,
+            </if>
+            <if test="image != null">
+                `image`,
+            </if>
+            <if test="description != null">
+                `description`,
+            </if>
+            <if test="content != null">
+                `content`,
+            </if>
+            <if test="classId != null">
+                `class_id`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid},
+            </if>
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="image != null">
+                #{image},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="classId != null">
+                #{classId},
+            </if>
+        </trim>
+    </insert>
+
 </mapper>

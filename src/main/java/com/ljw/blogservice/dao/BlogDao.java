@@ -10,4 +10,6 @@ public interface BlogDao {
 
     List<Blog> listAllBlogs();
 
+    void insertBlog(Blog blog);
+
 }
