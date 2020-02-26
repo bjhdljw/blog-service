@@ -2,6 +2,7 @@ package com.ljw.blogservice.controller;
 
 import com.ljw.blogservice.domain.Blog;
 import com.ljw.blogservice.domain.request.BlogForAdd;
+import com.ljw.blogservice.domain.response.Result;
 import com.ljw.blogservice.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,8 +31,9 @@ public class BlogController {
 
     @ResponseBody
     @RequestMapping(value = "/addBlog", method = RequestMethod.POST)
-    public void insertBlog(@RequestBody @Valid BlogForAdd blogForAdd, BindingResult bindingResult) {
+    public Result insertBlog(@RequestBody @Valid BlogForAdd blogForAdd, BindingResult bindingResult) {
         blogService.insertBlog(blogForAdd);
+        return new Result();
     }
 
 }

@@ -1,5 +1,7 @@
 package com.ljw.blogservice.aspect;
 
+import com.ljw.blogservice.constant.ResponseCode;
+import com.ljw.blogservice.exception.ParameterValidException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -34,7 +36,7 @@ public class ValidAspect {
                     for(FieldError fieldError : fieldErrors) {
                         list.add(fieldError.getField());
                     }
-                    throw new Exception("参数：" + list.toString() + "不合法");
+                    throw new ParameterValidException(ResponseCode.BLOG_ADD_PARAMTER_ERROR.getCode(), "参数：" + list.toString() + "不合法");
                 }
             }
         }
