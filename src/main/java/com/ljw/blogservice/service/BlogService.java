@@ -11,4 +11,6 @@ public interface BlogService {
 
     void insertBlog(BlogForAdd blogForAdd);
 
+    Blog selectByTitle(String title);
+
 }

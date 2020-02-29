@@ -24,6 +24,10 @@
         select * from blog;
     </select>
 
+    <select id="selectByTitle" parameterType="string" resultMap="BlogMap">
+        select * from blog where title = #{title};
+    </select>
+
     <insert id="insertBlog" parameterType="com.ljw.blogservice.domain.Blog">
         insert into blog
         <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -37,4 +37,9 @@ public class BlogServiceImpl implements BlogService {
         blogDao.insertBlog(blog);
     }
 
+    @Override
+    public Blog selectByTitle(String title) {
+        Blog blog = blogDao.selectByTitle(title);
+        return blog;
+    }
 }

@@ -12,4 +12,6 @@ public interface BlogDao {
 
     void insertBlog(Blog blog);
 
+    Blog selectByTitle(String title);
+
 }
