@@ -7,6 +7,7 @@ import com.ljw.blogservice.service.BlogService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,9 +32,18 @@ public class BlogServiceImpl implements BlogService {
         BeanUtils.copyProperties(blogForAdd, blog);
         blog.setUuid(uuid);
         int end = blog.getContent().length() - 1;
-        //三目运算符
-        String description = blog.getContent().substring(0, end > 100 ? 100 : end);
-        blog.setDescription(description);
+        //获取博客摘要
+        if(StringUtils.isEmpty(blogForAdd.getContent())) {
+            String content = blogForAdd.getContent();
+            int endOfDescription = content.indexOf("</p>");
+            blog.setDescription(content.substring(3, endOfDescription));
+            //获取第一张图片的标签
+            int startOfImage = content.indexOf("img src=\"") + 9;
+            String image = content.substring(startOfImage);
+            int endOfImage = image.indexOf("\"");
+            image = image.substring(0, endOfImage);
+            blog.setImage(image);
+        }
         blogDao.insertBlog(blog);
     }
 
