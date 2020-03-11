@@ -3,6 +3,7 @@ package com.ljw.blogservice.controller;
 import com.ljw.blogservice.constant.ResponseCode;
 import com.ljw.blogservice.domain.Blog;
 import com.ljw.blogservice.domain.request.BlogForAdd;
+import com.ljw.blogservice.domain.request.BlogForTitle;
 import com.ljw.blogservice.domain.response.Result;
 import com.ljw.blogservice.exception.ParameterValidException;
 import com.ljw.blogservice.service.BlogService;
@@ -25,10 +26,12 @@ public class BlogController {
     private BlogService blogService;
 
     @ResponseBody
-    @RequestMapping("/listBlogs")
-    public List<Blog> listBlogs() {
+    @RequestMapping("/listBlog")
+    public Result listBlogs() {
         List<Blog> blogs = blogService.listAllBlogs();
-        return blogs;
+        Result result = new Result();
+        result.setData(blogs);
+        return result;
     }
 
     @ResponseBody
@@ -40,5 +43,15 @@ public class BlogController {
         blogService.insertBlog(blogForAdd);
         return new Result();
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/getBlogByTitle", method = RequestMethod.POST)
+    public Result getBlogByTitle(@RequestBody @Valid BlogForTitle blogForTitle, BindingResult bindingResult) {
+        Blog blog = blogService.selectByTitle(blogForTitle.getTitle());
+        Result result = new Result();
+        result.setData(blog);
+        return result;
+    }
+
 
 }

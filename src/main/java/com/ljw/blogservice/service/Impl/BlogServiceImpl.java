@@ -1,5 +1,6 @@
 package com.ljw.blogservice.service.Impl;
 
+import com.ljw.blogservice.constant.Constant;
 import com.ljw.blogservice.dao.BlogDao;
 import com.ljw.blogservice.domain.Blog;
 import com.ljw.blogservice.domain.request.BlogForAdd;
@@ -31,18 +32,9 @@ public class BlogServiceImpl implements BlogService {
         Blog blog = new Blog();
         BeanUtils.copyProperties(blogForAdd, blog);
         blog.setUuid(uuid);
-        int end = blog.getContent().length() - 1;
-        //获取博客摘要
-        if(StringUtils.isEmpty(blogForAdd.getContent())) {
-            String content = blogForAdd.getContent();
-            int endOfDescription = content.indexOf("</p>");
-            blog.setDescription(content.substring(3, endOfDescription));
-            //获取第一张图片的标签
-            int startOfImage = content.indexOf("img src=\"") + 9;
-            String image = content.substring(startOfImage);
-            int endOfImage = image.indexOf("\"");
-            image = image.substring(0, endOfImage);
-            blog.setImage(image);
+        if(!StringUtils.isEmpty(blogForAdd.getContent())) {
+            setDescription(blog);
+            setImage(blog);
         }
         blogDao.insertBlog(blog);
     }
@@ -52,4 +44,36 @@ public class BlogServiceImpl implements BlogService {
         Blog blog = blogDao.selectByTitle(title);
         return blog;
     }
+
+    public void setImage(Blog blog) {
+        String content = blog.getContent();
+        int startOfImage = content.indexOf(Constant.IMAGETAGLEFT) + Constant.IMAGETAGLEFT.length();
+        String image = content.substring(startOfImage);
+        int endOfImage = image.indexOf("\"");
+        image = image.substring(0, endOfImage);
+        blog.setImage(image);
+    }
+
+    public void setDescription(Blog blog) {
+        String content = blog.getContent();
+        int startOfDescription = content.indexOf(Constant.PTAGLEFT);
+        int endOfDescription = content.indexOf(Constant.PTAGRIGHT);
+        String firstParagraph = content.substring(startOfDescription + Constant.PTAGLEFT.length(), endOfDescription);
+        String description = filterImageTag(firstParagraph);
+        blog.setDescription(description);
+    }
+
+    public String filterImageTag(String depscriptionWithImage) {
+        int startOfTag = depscriptionWithImage.indexOf(Constant.IMAGETAGLEFT);
+        if(startOfTag == -1) {
+            return depscriptionWithImage;
+        }
+        int endOfTag = depscriptionWithImage.indexOf(Constant.TAGRIGHT);
+        String halfOfString = depscriptionWithImage.substring(0, startOfTag);
+        String anotherHalfOfString = depscriptionWithImage.substring(endOfTag + Constant.TAGRIGHT.length());
+        String newString = halfOfString + "<图片>" + anotherHalfOfString;
+        newString = filterImageTag(newString);
+        return newString;
+    }
+
 }
