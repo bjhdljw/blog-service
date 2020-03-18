@@ -21,11 +21,11 @@
     </resultMap>
 
     <select id="listAllBlogs" resultMap="BlogMap">
-        select * from blog;
+        select b.*, bt.cate_name from blog b join blog_tag bt on b.class_id = bt.class_id;
     </select>
 
     <select id="selectByTitle" parameterType="string" resultMap="BlogMap">
-        select * from blog where title = #{title};
+        select b.*, bt.cate_name from blog b join blog_tag bt on b.class_id = bt.class_id where b.title = #{title};
     </select>
 
     <insert id="insertBlog" parameterType="com.ljw.blogservice.domain.Blog">
