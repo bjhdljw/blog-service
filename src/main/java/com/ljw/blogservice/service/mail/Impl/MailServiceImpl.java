@@ -25,7 +25,7 @@ public class MailServiceImpl implements MailService {
         Properties properties = new Properties();
         properties.setProperty("mail.smtp.timeout", "25000");
         properties.setProperty("mail.smtp.auth", "false");
-//        properties.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        properties.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         mailSender.setJavaMailProperties(properties);
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -34,7 +34,7 @@ public class MailServiceImpl implements MailService {
         mimeMessageHelper.setTo(des);
         mimeMessageHelper.setSubject(title);
         mimeMessageHelper.setText(msg);
-
+        //调用这个函数会阻塞一会
         mailSender.send(mimeMessage);
 
     }

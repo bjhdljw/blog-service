@@ -6,6 +6,13 @@ spring:
     password:
     url: jdbc:mysql://192.168.1.107:3306/blog_service?characterEncoding=UTF-8&allowMultiQueries=true&useTimeZone=true&serverTimezone=GMT%2B8
     driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    host: 192.168.1.107
+    port: 6379
+    database: 0
+    jedis:
+      pool:
+        max-active: 100
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   type-aliases-package: com.ljw.blogservice.domain

@@ -1,8 +1,5 @@
 package com.ljw.blogservice.domain.response;
 
-import lombok.Data;
-
-@Data
 public class Result {
 
     private Integer code = 1;
@@ -11,4 +8,28 @@ public class Result {
 
     private Object Data;
 
+    public Result setData(Object data) {
+        Data = data;
+        return this;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public Object getData() {
+        return Data;
+    }
 }
