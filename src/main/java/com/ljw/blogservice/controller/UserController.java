@@ -1,7 +1,9 @@
 package com.ljw.blogservice.controller;
 
 import com.ljw.blogservice.domain.request.PublicKeyGet;
+import com.ljw.blogservice.domain.request.SetAESKey;
 import com.ljw.blogservice.domain.response.Result;
+import com.ljw.blogservice.domain.user.UserInfo;
 import com.ljw.blogservice.service.mail.MailService;
 import com.ljw.blogservice.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +26,45 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @ResponseBody
-    @RequestMapping("/testMail")
-    public void testMail() throws Exception{
-        mailService.sendMail("bjcystl@163.com", "lll", "ttt");
-    }
+//    @ResponseBody
+//    @RequestMapping("/testMail")
+//    public void testMail() throws Exception{
+//        mailService.sendMail("bjcystl@163.com", "lll", "ttt");
+//    }
 
+    /**
+     * 获取公钥
+     * @param publicKeyGet
+     * @param bindingResult
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
     @RequestMapping(value = "/getPublicKey", method = RequestMethod.POST)
     public Result getPublicKey(@RequestBody @Valid PublicKeyGet publicKeyGet, BindingResult bindingResult) throws Exception {
         String publicKey = userService.createPublicKey(publicKeyGet.getUserName());
         return new Result().setData(publicKey);
     }
+
+    /**
+     * 保存AES密钥
+     * @param setAESKey
+     * @param bindingResult
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping(value = "/setKey", method = RequestMethod.POST)
+    public Result setKey(@RequestBody @Valid SetAESKey setAESKey, BindingResult bindingResult) throws Exception{
+        userService.setKey(setAESKey);
+        return new Result();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public Result register(@RequestBody @Valid UserInfo userInfo, BindingResult bindingResult) {
+        return new Result();
+    }
+
 
 }

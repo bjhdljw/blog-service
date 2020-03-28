@@ -1,5 +1,7 @@
 package com.ljw.blogservice.service.mail;
 
+import com.ljw.blogservice.domain.user.UserInfo;
+
 import javax.mail.MessagingException;
 
 public interface MailService {
@@ -11,5 +13,7 @@ public interface MailService {
      * @param title
      */
     void sendMail(String des, String msg, String title) throws MessagingException;
+
+    void sendActiveMail(UserInfo userInfo, String activeCode);
 
 }

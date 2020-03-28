@@ -1,5 +1,6 @@
 package com.ljw.blogservice.service.mail.Impl;
 
+import com.ljw.blogservice.domain.user.UserInfo;
 import com.ljw.blogservice.service.mail.MailService;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -36,6 +37,11 @@ public class MailServiceImpl implements MailService {
         mimeMessageHelper.setText(msg);
         //调用这个函数会阻塞一会
         mailSender.send(mimeMessage);
+
+    }
+
+    @Override
+    public void sendActiveMail(UserInfo userInfo, String activeCode) {
 
     }
 }
