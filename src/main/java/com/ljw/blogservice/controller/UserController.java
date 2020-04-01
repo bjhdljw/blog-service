@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
@@ -62,7 +63,16 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public Result register(@RequestBody @Valid UserInfo userInfo, BindingResult bindingResult) {
+    public Result register(@RequestBody @Valid UserInfo userInfo, BindingResult bindingResult) throws Exception{
+        userService.register(userInfo);
+        return new Result();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/active", method = RequestMethod.GET)
+    public Result active(HttpServletRequest httpServletRequest) throws Exception{
+        String code = httpServletRequest.getParameter("activeCode");
+        //TODO 调用激活service层接口
         return new Result();
     }
 

@@ -9,6 +9,8 @@ public interface UserService {
 
     void setKey(SetAESKey setAESKey) throws  Exception;
 
-    void register(UserInfo userInfo);
+    void register(UserInfo userInfo) throws Exception;
+
+    void active(String code) throws Exception;
 
 }

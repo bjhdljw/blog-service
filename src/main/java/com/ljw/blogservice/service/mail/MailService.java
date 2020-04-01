@@ -14,6 +14,6 @@ public interface MailService {
      */
     void sendMail(String des, String msg, String title) throws MessagingException;
 
-    void sendActiveMail(UserInfo userInfo, String activeCode);
+    void sendActiveMail(UserInfo userInfo, String activeCode) throws Exception;
 
 }
