@@ -1,6 +1,7 @@
 package com.ljw.blogservice.service.user.Impl;
 
 import com.ljw.blogservice.constant.RedisConstant;
+import com.ljw.blogservice.dao.UserDao;
 import com.ljw.blogservice.domain.request.SetAESKey;
 import com.ljw.blogservice.domain.user.UserInfo;
 import com.ljw.blogservice.service.mail.MailService;
@@ -25,6 +26,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public String createPublicKey(String userName) throws Exception {
@@ -67,9 +71,21 @@ public class UserServiceImpl implements UserService {
         if(!redisTemplate.hasKey(RedisConstant.ACTIVECODE + code)) {
             return;
         }
-        Map userInfo = (Map) redisTemplate.opsForValue().get(RedisConstant.ACTIVECODE + code);
-        String AESKey = (String) redisTemplate.opsForValue().get(RedisConstant.AESKEY + userInfo.get("userName"));
-        String passWord = AESUtil.decrypt(userInfo.get("passWord").toString(), AESKey);
+        Map map = (Map) redisTemplate.opsForValue().get(RedisConstant.ACTIVECODE + code);
+        String AESKey = (String) redisTemplate.opsForValue().get(RedisConstant.AESKEY + map.get("userName"));
+        String passWord = AESUtil.decrypt(map.get("password").toString(), AESKey);
         String md5OfPass = Md5Util.getMd5OfPass(passWord);
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName(map.get("userName").toString());
+        userInfo.setPassword(md5OfPass);
+        userInfo.setMail(map.get("mail").toString());
+        addUser(userInfo);
+    }
+
+    @Override
+    public void addUser(UserInfo userInfo) {
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+        userInfo.setUuid(uuid);
+        userDao.insertUser(userInfo);
     }
 }

@@ -27,12 +27,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-//    @ResponseBody
-//    @RequestMapping("/testMail")
-//    public void testMail() throws Exception{
-//        mailService.sendMail("bjcystl@163.com", "lll", "ttt");
-//    }
-
     /**
      * 获取公钥
      * @param publicKeyGet
@@ -72,7 +66,7 @@ public class UserController {
     @RequestMapping(value = "/active", method = RequestMethod.GET)
     public Result active(HttpServletRequest httpServletRequest) throws Exception{
         String code = httpServletRequest.getParameter("activeCode");
-        //TODO 调用激活service层接口
+        userService.active(code);
         return new Result();
     }
 

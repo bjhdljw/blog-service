@@ -13,4 +13,6 @@ public interface UserService {
 
     void active(String code) throws Exception;
 
+    void addUser(UserInfo userInfo);
+
 }
