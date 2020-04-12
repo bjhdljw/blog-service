@@ -1,13 +1,16 @@
 package com.ljw.blogservice.controller;
 
+import com.ljw.blogservice.constant.ResponseCode;
 import com.ljw.blogservice.domain.request.PublicKeyGet;
 import com.ljw.blogservice.domain.request.SetAESKey;
 import com.ljw.blogservice.domain.response.Result;
 import com.ljw.blogservice.domain.user.UserInfo;
+import com.ljw.blogservice.exception.ParameterValidException;
 import com.ljw.blogservice.service.mail.MailService;
 import com.ljw.blogservice.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +58,13 @@ public class UserController {
         return new Result();
     }
 
+    /**
+     * 缓存用户信息
+     * @param userInfo
+     * @param bindingResult
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Result register(@RequestBody @Valid UserInfo userInfo, BindingResult bindingResult) throws Exception{
@@ -66,6 +76,9 @@ public class UserController {
     @RequestMapping(value = "/active", method = RequestMethod.GET)
     public Result active(HttpServletRequest httpServletRequest) throws Exception{
         String code = httpServletRequest.getParameter("activeCode");
+        if(StringUtils.isEmpty(code)) {
+            throw new ParameterValidException(ResponseCode.USER_ACTIVE_ERROR.getCode(), ResponseCode.USER_ACTIVE_ERROR.getMessage());
+        }
         userService.active(code);
         return new Result();
     }

@@ -1,5 +1,8 @@
 package com.ljw.blogservice.util;
 
+import com.ljw.blogservice.constant.ResponseCode;
+import com.ljw.blogservice.exception.BlogServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Base64Utils;
 
 import javax.crypto.Cipher;
@@ -9,6 +12,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
+@Slf4j
 public class RSAUtil {
 
     public static final int MAX_DESCRYPT_BLOCK = 128;
@@ -20,10 +24,16 @@ public class RSAUtil {
      * @return
      * @throws Exception
      */
-    public static KeyPair getKeyPair() throws Exception{
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(1024);
-        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+    public static KeyPair getKeyPair() {
+        KeyPair keyPair = null;
+        try {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(1024);
+            keyPair = keyPairGenerator.generateKeyPair();
+        } catch (Exception e) {
+            log.info("生成密钥对失败");
+            throw new BlogServiceException(ResponseCode.USER_GENERATE_KEY_ERROR.getCode(), ResponseCode.USER_GENERATE_KEY_ERROR.getMessage());
+        }
         return keyPair;
     }
 
@@ -87,6 +97,25 @@ public class RSAUtil {
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         byte[] result = cipherBySegment(cipher, target, MAX_DESCRYPT_BLOCK);
         return Base64Utils.encodeToString(result);
+    }
+
+    /**
+     * 使用私钥解密（不分段）
+     * @return
+     */
+    public static String descrypt(String targetBase64, String privateKeyBase64) {
+        String result = null;
+        try {
+            byte[] target = Base64Utils.decodeFromString(targetBase64);
+            PrivateKey privateKey = generatorPrivateKeyObject(privateKeyBase64);
+            Cipher cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.DECRYPT_MODE, privateKey);
+            result = new String(cipher.doFinal(target));
+        } catch (Exception e) {
+            log.info("密文：{}，私钥：{}", targetBase64, privateKeyBase64);
+            throw new BlogServiceException(ResponseCode.USER_RSA_DESCRYPT_ERROR.getCode(), ResponseCode.USER_RSA_DESCRYPT_ERROR.getMessage());
+        }
+        return result;
     }
 
     /**

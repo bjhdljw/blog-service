@@ -43,7 +43,7 @@
                 #{uuid},
             </if>
             <if test="userName != null">
-                #{user_name},
+                #{userName},
             </if>
             <if test="mail != null">
                 #{mail},
@@ -55,11 +55,20 @@
                 #{phone},
             </if>
             <if test="wechatId != null">
-                #{wechat_id},
+                #{wechatId},
             </if>
             <if test="roleId != null">
-                #{role_id},
+                #{roleId},
             </if>
         </trim>
     </insert>
+
+    <select id="getListByUserName" parameterType="string" resultType="com.ljw.blogservice.domain.user.UserInfo">
+        select * from user_info where user_name = #{userName}
+    </select>
+
+    <select id="getListByMail" parameterType="string" resultType="com.ljw.blogservice.domain.user.UserInfo">
+        select * from user_info where mail = #{mail}
+    </select>
+
 </mapper>

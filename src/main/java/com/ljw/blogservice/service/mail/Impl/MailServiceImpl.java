@@ -59,6 +59,7 @@ public class MailServiceImpl implements MailService {
         return mailSender;
     }
 
+    @Async
     @Override
     public void sendActiveMail(UserInfo userInfo, String activeCode) throws Exception{
         Map<String, String> parameters = new HashMap<>();
