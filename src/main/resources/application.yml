@@ -19,5 +19,5 @@ mybatis:
 mail:
   host: "smtp.163.com"
   username: "lnfsljw@163.com"
-  code: "AJAXJUBIXADYDUSR"
+  code:
   port: 25
