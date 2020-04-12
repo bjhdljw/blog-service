@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         //1.产生密钥对
         //2.将私钥存储在缓存里，userName-privateKey
         //3.将公钥的Base64编码返回
-        if(CollectionUtils.isEmpty(userDao.getListByUserName(userName))) {
+        if(!CollectionUtils.isEmpty(userDao.getListByUserName(userName))) {
             log.info("用户名已存在：{}", userName);
             throw new BlogServiceException(ResponseCode.USER_NAME_EXIST_ERROR.getCode(), ResponseCode.USER_NAME_EXIST_ERROR.getMessage());
         }
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
         //1.根据用户名，从redis中取出私钥
         //2.使用私钥将密文解密，得到了AES对称密钥
         //3.将对称密钥保存在缓存中
-        if(CollectionUtils.isEmpty(userDao.getListByUserName(setAESKey.getUserName()))) {
+        if(!CollectionUtils.isEmpty(userDao.getListByUserName(setAESKey.getUserName()))) {
             log.info("用户名已存在：{}", setAESKey.getUserName());
             throw new BlogServiceException(ResponseCode.USER_NAME_EXIST_ERROR.getCode(), ResponseCode.USER_NAME_EXIST_ERROR.getMessage());
         }
@@ -73,11 +73,11 @@ public class UserServiceImpl implements UserService {
         //0.用户名、邮箱唯一校验
         //1.生成激活码，将激活码和用户信息一同存储到redis里
         //2.向用户发送激活邮件
-        if(CollectionUtils.isEmpty(userDao.getListByUserName(userInfo.getUserName()))) {
+        if(!CollectionUtils.isEmpty(userDao.getListByUserName(userInfo.getUserName()))) {
             log.info("用户名已存在：{}", userInfo.getUserName());
             throw new BlogServiceException(ResponseCode.USER_NAME_EXIST_ERROR.getCode(), ResponseCode.USER_NAME_EXIST_ERROR.getMessage());
         }
-        if(CollectionUtils.isEmpty(userDao.getListByMail(userInfo.getMail()))) {
+        if(!CollectionUtils.isEmpty(userDao.getListByMail(userInfo.getMail()))) {
             log.info("邮箱已使用：{}", userInfo.getMail());
             throw new BlogServiceException(ResponseCode.USER_MAIL_USED_ERROR.getCode(), ResponseCode.USER_MAIL_USED_ERROR.getMessage());
         }
