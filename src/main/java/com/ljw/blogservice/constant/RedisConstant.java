@@ -8,4 +8,8 @@ public class RedisConstant {
 
     public static final String ACTIVECODE = "activecode:";
 
+    public static final String TOKEN = "token:";
+
+    public static final String LOGIN = "login:";
+
 }

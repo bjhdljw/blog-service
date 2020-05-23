@@ -1,5 +1,6 @@
 package com.ljw.blogservice.controller;
 
+import com.ljw.blogservice.annotation.RequireRole;
 import com.ljw.blogservice.constant.ResponseCode;
 import com.ljw.blogservice.domain.Blog;
 import com.ljw.blogservice.domain.request.BlogForAdd;
@@ -27,6 +28,7 @@ public class BlogController {
 
     @ResponseBody
     @RequestMapping("/listBlog")
+    @RequireRole(roles = {"admin", "user"})
     public Result listBlogs() {
         List<Blog> blogs = blogService.listAllBlogs();
         Result result = new Result();

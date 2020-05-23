@@ -17,7 +17,10 @@ public enum ResponseCode {
     USER_RSA_DESCRYPT_ERROR("02003", "RSA解密异常"),
     USER_MAIL_USED_ERROR("002004", "邮箱已使用"),
     USER_ACTIVE_ERROR("002005", "激活码不能为空"),
-    USER_ACTIVE_CODE_ERROR("002006", "激活码错误")
+    USER_ACTIVE_CODE_ERROR("002006", "激活码错误"),
+    USER_LOGIN_ERROR("002007", "用户登陆异常"),
+    USER_LOGIN_USERNAME_ERROR("002008", "用户名不存在"),
+    USER_LOGIN_PASSWORD_ERROR("002009", "用户名/密码错误"),
     ;
 
     private final String code;

@@ -3,22 +3,25 @@ package com.ljw.blogservice.service.user.Impl;
 import com.ljw.blogservice.constant.RedisConstant;
 import com.ljw.blogservice.constant.ResponseCode;
 import com.ljw.blogservice.dao.UserDao;
+import com.ljw.blogservice.domain.request.Login;
 import com.ljw.blogservice.domain.request.SetAESKey;
+import com.ljw.blogservice.domain.response.Session;
 import com.ljw.blogservice.domain.user.UserInfo;
 import com.ljw.blogservice.exception.BlogServiceException;
 import com.ljw.blogservice.exception.ParameterValidException;
 import com.ljw.blogservice.service.mail.MailService;
 import com.ljw.blogservice.service.user.UserService;
-import com.ljw.blogservice.util.AESUtil;
-import com.ljw.blogservice.util.Md5Util;
-import com.ljw.blogservice.util.RSAUtil;
+import com.ljw.blogservice.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.KeyPair;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +38,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private HttpServletRequest request;
 
     @Override
     public String createPublicKey(String userName) throws Exception {
@@ -112,5 +118,39 @@ public class UserServiceImpl implements UserService {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         userInfo.setUuid(uuid);
         userDao.insertUser(userInfo);
+    }
+
+    @Override
+    public Session login(Login login) throws Exception{
+        //0.校验用户名存在于数据库中
+        //1.从缓存中拿到对称密钥
+        //2.使用对称密钥解密
+        //3.计算密码的md5摘要，跟数据库中村的密码比对
+        //4.生成token
+        //5.token/用户信息存到缓存
+        List<UserInfo> userInfos = userDao.getListByUserName(login.getUserName());
+        if(CollectionUtils.isEmpty(userInfos)) {
+            throw new BlogServiceException(ResponseCode.USER_LOGIN_USERNAME_ERROR.getCode(), ResponseCode.USER_LOGIN_USERNAME_ERROR.getMessage());
+        }
+        if(!redisTemplate.hasKey(RedisConstant.AESKEY + login.getUserName())) {
+            throw new BlogServiceException(ResponseCode.USER_LOGIN_ERROR.getCode(), ResponseCode.USER_LOGIN_ERROR.getMessage());
+        }
+        String aesKey = (String) redisTemplate.opsForValue().get(RedisConstant.AESKEY + login.getUserName());
+        String rawPassword = AESUtil.decrypt(login.getPassword(), aesKey);
+        String md5OfPass = Md5Util.getMd5OfPass(rawPassword);
+        UserInfo userInfo = userInfos.get(0);
+        if(!userInfo.getPassword().equals(md5OfPass)) {
+            throw new BlogServiceException(ResponseCode.USER_LOGIN_PASSWORD_ERROR.getCode(), ResponseCode.USER_LOGIN_PASSWORD_ERROR.getMessage());
+        }
+        String randomCode = UUID.randomUUID().toString().replace("-", "");
+        Map<String, Object> map = new HashMap<>();
+        map.put("randomCode", randomCode);
+        map.put("userUuid", userInfo.getUuid());
+        String token = JWTUtil.encode(map, RequestUtil.getIpAddr(request));
+        Session session = new Session();
+        session.setToken(token);
+        redisTemplate.opsForValue().set(RedisConstant.TOKEN, randomCode, 30, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(RedisConstant.LOGIN + randomCode, userInfo, 30, TimeUnit.MINUTES);
+        return session;
     }
 }

@@ -1,9 +1,11 @@
 package com.ljw.blogservice.controller;
 
 import com.ljw.blogservice.constant.ResponseCode;
+import com.ljw.blogservice.domain.request.Login;
 import com.ljw.blogservice.domain.request.PublicKeyGet;
 import com.ljw.blogservice.domain.request.SetAESKey;
 import com.ljw.blogservice.domain.response.Result;
+import com.ljw.blogservice.domain.response.Session;
 import com.ljw.blogservice.domain.user.UserInfo;
 import com.ljw.blogservice.exception.ParameterValidException;
 import com.ljw.blogservice.service.mail.MailService;
@@ -31,7 +33,7 @@ public class UserController {
     private UserService userService;
 
     /**
-     * 获取公钥
+     * 获取公钥（注册、登陆）
      * @param publicKeyGet
      * @param bindingResult
      * @return
@@ -45,7 +47,7 @@ public class UserController {
     }
 
     /**
-     * 保存AES密钥
+     * 保存AES密钥（注册、登陆）
      * @param setAESKey
      * @param bindingResult
      * @return
@@ -59,7 +61,7 @@ public class UserController {
     }
 
     /**
-     * 缓存用户信息
+     * 缓存用户信息（注册）
      * @param userInfo
      * @param bindingResult
      * @return
@@ -72,6 +74,12 @@ public class UserController {
         return new Result();
     }
 
+    /**
+     * 激活账户接口（注册）
+     * @param httpServletRequest
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
     @RequestMapping(value = "/active", method = RequestMethod.GET)
     public Result active(HttpServletRequest httpServletRequest) throws Exception{
@@ -81,6 +89,13 @@ public class UserController {
         }
         userService.active(code);
         return new Result();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public Result login(@RequestBody @Valid Login login, BindingResult bindingResult) throws Exception{
+        Session session = userService.login(login);
+        return new Result().setData(session);
     }
 
 
