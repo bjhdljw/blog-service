@@ -21,6 +21,9 @@ public enum ResponseCode {
     USER_LOGIN_ERROR("002007", "用户登陆异常"),
     USER_LOGIN_USERNAME_ERROR("002008", "用户名不存在"),
     USER_LOGIN_PASSWORD_ERROR("002009", "用户名/密码错误"),
+    USER_LOGIN_TOKEN_ERROR("002010", "token不合法"),
+    USER_AUTH_CHECK_ERROR("002011", "权限校验异常"),
+    USER_AUTH_ERROR("002012", "用户无此功能的权限"),
     ;
 
     private final String code;

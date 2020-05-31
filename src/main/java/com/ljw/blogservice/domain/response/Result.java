@@ -2,7 +2,7 @@ package com.ljw.blogservice.domain.response;
 
 public class Result {
 
-    private Integer code = 1;
+    private String code = "1";
 
     private String message = "成功";
 
@@ -13,11 +13,11 @@ public class Result {
         return this;
     }
 
-    public Integer getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
